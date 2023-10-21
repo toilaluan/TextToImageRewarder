@@ -1,0 +1,12 @@
+rewarder:
+  target: models.TextToImageRewarder
+  params:
+    prompt_alignment_rewarder_config:
+      target: models.TextAlignmentRewardModel
+      params:
+        name: "ImageReward-v1.0"
+    diversity_rewarder_config:
+      target: models.DiversityRewardModel
+      params:
+        model: "resnet18"
+        pretrained: true
