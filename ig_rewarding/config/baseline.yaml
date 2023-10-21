@@ -1,12 +1,12 @@
 rewarder:
-  target: models.TextToImageRewarder
+  target: ig_rewarding.models.TextToImageRewarder
   params:
     prompt_alignment_rewarder_config:
-      target: models.TextAlignmentRewardModel
+      target: ig_rewarding.models.TextAlignmentRewardModel
       params:
         name: "ImageReward-v1.0"
     diversity_rewarder_config:
-      target: models.DiversityRewardModel
+      target: ig_rewarding.models.DiversityRewardModel
       params:
         model: "resnet18"
         pretrained: true
