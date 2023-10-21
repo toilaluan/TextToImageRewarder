@@ -20,5 +20,4 @@ class TextToImageRewarder(nn.Module):
     def forward(self, images: List[Image.Image], prompt: str) -> torch.FloatTensor:
         scores = self.prompt_alignment_rewarder(images, prompt)
         diversity_rewards = self.diversity_rewarder.calculate_diversity_rewards(images)
-        print(scores, diversity_rewards)
         return scores * (1 - self.alpha) + diversity_rewards * self.alpha
