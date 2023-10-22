@@ -1,0 +1,7 @@
+bert_score==0.3.13
+clip_interrogator==0.6.0
+image_reward==1.5
+Pillow==10.1.0
+PyYAML==6.0
+timm==0.6.13
+torch==2.1.0+cu118

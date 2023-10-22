@@ -1,12 +1,30 @@
 rewarder:
   target: ig_rewarding.models.TextToImageRewarder
   params:
-    prompt_alignment_rewarder_config:
-      target: ig_rewarding.models.TextAlignmentRewardModel
-      params:
-        name: "ImageReward-v1.0"
-    diversity_rewarder_config:
-      target: ig_rewarding.models.DiversityRewardModel
-      params:
-        model: "resnet18"
-        pretrained: true
+    rewarder_configs:
+      prompt_alignment_rewarder:
+        target: ig_rewarding.models.TextAlignmentRewardModel
+        params:
+          name: "ImageReward-v1.0"
+          device: "cuda"
+        weight: 1
+      diversity_rewarder:
+        target: ig_rewarding.models.DiversityRewardModel
+        params:
+          model: "resnet18"
+          pretrained: true
+          device: "cuda"
+        weight: 0.15
+      clip_interrogator_rewarder:
+        target: ig_rewarding.models.CLIPInterrogatorRewardModel
+        params:
+          ci_config:
+            clip_model_name: "ViT-L-14/openai"
+            caption_model_name: "blip-large"
+            device: "cuda"
+          bert_scorer_config:
+            model_type: "microsoft/deberta-xlarge-mnli"
+            device: "cuda"
+            lang: "en"
+            rescale_with_baseline: true
+        weight: 0.15

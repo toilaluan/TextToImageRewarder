@@ -6,20 +6,20 @@ import torch
 
 
 class TextToImageRewarder(nn.Module):
-    def __init__(
-        self, prompt_alignment_rewarder_config, diversity_rewarder_config, alpha=0.15
-    ):
+    def __init__(self, rewarder_configs: dict):
         super().__init__()
-        self.prompt_alignment_rewarder = instantiate_from_config(
-            prompt_alignment_rewarder_config
+        self.rewarders = nn.ModuleList(
+            [instantiate_from_config(config) for config in rewarder_configs.values()]
         )
-        self.diversity_rewarder = instantiate_from_config(diversity_rewarder_config)
-        self.alpha = alpha
+        self.weights = torch.tensor(
+            [config["weight"] for config in rewarder_configs.values()]
+        )
+        self.rewarder_configs = rewarder_configs
 
     @torch.inference_mode()
     def forward(self, images: List[Image.Image], prompt: str) -> torch.FloatTensor:
-        scores = self.prompt_alignment_rewarder(images, prompt)
-        diversity_rewards = self.diversity_rewarder.calculate_diversity_rewards(images)
-        accumulated_scores = scores * (1 - self.alpha) + diversity_rewards * self.alpha
-        print("accumulated_scores", accumulated_scores)
-        return accumulated_scores.mean().item()
+        scores = torch.stack([rewarder(images, prompt).cpu() for rewarder in self.rewarders])
+        for rewarder_name, score in zip(self.rewarder_configs.keys(), scores):
+            print(f"{rewarder_name}: {score}")
+        scores = torch.sum(scores * self.weights)
+        return scores.mean()
