@@ -4,4 +4,5 @@ image_reward==1.5
 Pillow==10.1.0
 PyYAML==6.0
 timm==0.6.13
-torch==2.1.0+cu118
+clip
+torch

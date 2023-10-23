@@ -1,4 +1,8 @@
 # Text To Image Rewarding
+Prompt Generator by Topic:
+1. Query prompt that similar to the topic in `diffusiondb` dataset.
+2. Using `Magic Prompt` (finetuned GPT-2) to continue generate prompt.
+
 Rating Prompt - Images generated pair using mixture of expert:
 1. [`Image Reward`](https://github.com/THUDM/ImageReward) `(-inf,+inf)`
 2. Diversity Reward using [`timm`](https://github.com/huggingface/pytorch-image-models) pretrained models. `(0, 1)`
@@ -23,6 +27,8 @@ from PIL import Image
 device = "cuda"
 config_file = "ig_rewarding/config/baseline.yaml"
 config = yaml.load(open(config_file, "r"), Loader=yaml.FullLoader)
+prompter = instantiate_from_config(config["prompter"]).eval().to(device)
+print("Generated Prompt:", prompter.generate_prompt(["anime"]))
 
 model = instantiate_from_config(config["rewarder"]).eval().to(device)
 prompt = (
@@ -37,9 +43,12 @@ image_folder = "assets/duplicated_images"
 images = glob.glob(f"{image_folder}/*")
 images = [Image.open(image) for image in images]
 print("Model Score:", model(images, prompt))
+
 ```
 Output is something like that
 ```
+Generated Prompt: ['science fiction, a wholesome animation key shot of masculine lynx - headed navigator, navigation deck of nostromo, studio ghibli, pixar and disney animation, sharp, disney concept art watercolor illustration by mandy jurgens and alphonse mucha and alena aenami, pastel color palette, dramatic lighting, highly detailed ily']
+
 prompt_alignment_rewarder: -0.6467663645744324
 diversity_rewarder: 0.6754872798919678
 clip_interrogator_rewarder: 0.18380855023860931

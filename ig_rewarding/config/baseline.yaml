@@ -1,3 +1,12 @@
+prompter:
+  target: ig_rewarding.models.PromptGenerator
+  params:
+    chroma_db_config:
+      root_path: chroma_db/
+      collection_name: "diffusiondb"
+      prompt_table_url: "https://huggingface.co/datasets/poloclub/diffusiondb/resolve/main/metadata.parquet"
+      n_neighbors: 500
+
 rewarder:
   target: ig_rewarding.models.TextToImageRewarder
   params:

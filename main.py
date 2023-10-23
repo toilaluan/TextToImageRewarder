@@ -7,6 +7,8 @@ from PIL import Image
 device = "cuda"
 config_file = "ig_rewarding/config/baseline.yaml"
 config = yaml.load(open(config_file, "r"), Loader=yaml.FullLoader)
+prompter = instantiate_from_config(config["prompter"]).eval().to(device)
+print("Generated Prompt:", prompter.generate_prompt(["anime"]))
 
 model = instantiate_from_config(config["rewarder"]).eval().to(device)
 prompt = (

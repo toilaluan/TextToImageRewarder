@@ -1,2 +1,6 @@
 *.pyc
 cache
+*.bin
+*.sqlite3
+*.pickle
+*.parquet
