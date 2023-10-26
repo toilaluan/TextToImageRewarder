@@ -1,6 +1,12 @@
 *.pyc
 cache
 *.bin
+*.png
 *.sqlite3
 *.pickle
 *.parquet
+*.webp
+*.jsonl
+*.json
+images/
+outputs/

@@ -7,8 +7,10 @@ from bert_score import BERTScorer
 
 
 class CLIPInterrogatorRewardModel(nn.Module):
-    def __init__(self, ci_config, bert_scorer_config):
+    def __init__(self, ci_config, bert_scorer_config, device="cuda"):
         super().__init__()
+        ci_config["device"] = device
+        bert_scorer_config["device"] = device
         self.device = ci_config["device"]
         self.interrogator = Interrogator(Config(**ci_config))
         self.bert_scorer = BERTScorer(**bert_scorer_config)

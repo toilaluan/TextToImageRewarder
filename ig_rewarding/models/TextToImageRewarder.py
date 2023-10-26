@@ -8,6 +8,7 @@ import torch
 class TextToImageRewarder(nn.Module):
     def __init__(self, rewarder_configs: dict):
         super().__init__()
+
         self.rewarders = nn.ModuleList(
             [instantiate_from_config(config) for config in rewarder_configs.values()]
         )
@@ -18,8 +19,12 @@ class TextToImageRewarder(nn.Module):
 
     @torch.inference_mode()
     def forward(self, images: List[Image.Image], prompt: str) -> torch.FloatTensor:
-        scores = torch.stack([rewarder(images, prompt).cpu() for rewarder in self.rewarders])
-        for rewarder_name, score in zip(self.rewarder_configs.keys(), scores):
-            print(f"{rewarder_name}: {score}")
-        scores = torch.sum(scores * self.weights)
-        return scores.mean()
+        total_scores = torch.stack(
+            [rewarder(images, prompt).cpu() for rewarder in self.rewarders]
+        )
+        sum_scores = torch.sum(total_scores * self.weights)
+        total_scores = {
+            rewarder_name: score.item()
+            for rewarder_name, score in zip(self.rewarder_configs.keys(), total_scores)
+        }
+        return sum_scores.mean().item(), total_scores

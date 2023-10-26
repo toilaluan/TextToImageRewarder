@@ -1,5 +1,6 @@
 from .DiversityRewardModel import DiversityRewardModel
 from .TextToImageRewarder import TextToImageRewarder
-from .TextAlignmentRewardModel import TextAlignmentRewardModel
+from .ImageRewardModel import ImageRewardModel
 from .CLIPInterrogatorRewardModel import CLIPInterrogatorRewardModel
 from .PromptGenerator import PromptGenerator
+from .BLIPRewardModel import BLIPRewardModel
