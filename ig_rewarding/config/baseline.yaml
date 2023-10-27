@@ -17,12 +17,17 @@ rewarder:
           name: "ImageReward-v1.0"
           device: "cuda"
         weight: 1
-      blip_rewarder:
-        target: ig_rewarding.models.BLIPRewardModel
+      hps_v2_rewarder:
+        target: ig_rewarding.models.HPSv2
         params:
-          name: "BLIP"
           device: "cuda"
-        weight: 0.25
+        weight: 1
+      # blip_rewarder:
+      #   target: ig_rewarding.models.BLIPRewardModel
+      #   params:
+      #     name: "BLIP"
+      #     device: "cuda"
+      #   weight: 0.25
       # diversity_rewarder:
       #   target: ig_rewarding.models.DiversityRewardModel
       #   params:
