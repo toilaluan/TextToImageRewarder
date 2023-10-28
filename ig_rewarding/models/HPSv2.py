@@ -10,6 +10,8 @@ import numpy as np
 class HPSv2(nn.Module):
     def __init__(self, device):
         super().__init__()
+        self.min = 0.2
+        self.max = 0.3
         self.device = device
         self.model, self.preprocess, self.tokenizer = self._init_model()
 
@@ -33,7 +35,8 @@ class HPSv2(nn.Module):
 
                 hps_score = torch.diagonal(logits_per_image).cpu()
             rewards.append(hps_score)
-        return torch.tensor(rewards).mean()
+        score = torch.tensor(rewards).mean() 
+        return (score - self.min) / (self.max - self.min)
 
     def _init_model(self, cp: str = os.path.join(root_path, "HPS_v2_compressed.pt")):
         initialize_model()

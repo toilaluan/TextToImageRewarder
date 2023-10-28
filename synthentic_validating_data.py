@@ -29,7 +29,7 @@ from ig_rewarding.utils import instantiate_from_config
 # %%
 N_TRY_PER_ENDPOINT = 50
 N_IMAGE_PER_PROMPT = 4
-
+NEGATIVE_PROMPT = "ugly, blurry, poor quality, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, deformed, ugly, blurry, bad anatomy, bad proportions, extra limbs, cloned face, skinny, glitchy, double torso, extra arms, extra hands, mangled fingers, missing lips, ugly face, distorted face, extra legs"
 TOPICS = [
     "animated style",
     "artistic style",
@@ -40,6 +40,9 @@ TOPICS = [
 ]
 ENDPOINTS = {
     "sd": [
+        "stablediffusionapi/edge-of-realism",
+        "stablediffusionapi/rev-anim",
+        "stablediffusionapi/realistic-vision-v51",
         "dreamlike-art/dreamlike-photoreal-2.0",
         "stabilityai/stable-diffusion-2-1",
         "CompVis/stable-diffusion-v1-4",
@@ -47,7 +50,6 @@ ENDPOINTS = {
     ],
     "sdxl": ["segmind/SSD-1B", "stabilityai/stable-diffusion-xl-base-1.0"],
 }
-NEGATIVE_PROMPT = "nsfw, low quality"
 DEVICE = "cuda"
 SAVE_DIR = "outputs"
 config_file = "ig_rewarding/config/baseline.yaml"
@@ -62,7 +64,6 @@ config = yaml.load(open(config_file, "r"), Loader=yaml.FullLoader)
 
 # %%
 validator = Validator(config["rewarder"], config["prompter"], device=DEVICE)
-
 # %% [markdown]
 # ### Define Loop for Validating above Models
 
@@ -95,6 +96,7 @@ def validate_pipe(
                 prompts,
                 num_images_per_prompt=1,
                 negative_prompt=[negative_prompt] * len(prompts),
+                guidance_scale=7.5
             )
             file_names = [
                 f"{pipeline_name}_{i}_{j*len(prompts)+t}.webp"
@@ -139,6 +141,7 @@ for sd_type, endpoints in ENDPOINTS.items():
                 use_safetensors=True,
                 variant="fp16",
             )
+        pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead", fullgraph=True)
         pipe = pipe.to(DEVICE)
         sub_metadata = validate_pipe(
             validator,
@@ -162,10 +165,13 @@ from datasets import load_dataset
 
 ds = load_dataset(
     "imagefolder",
-    data_dir="/root/edward/stablediffusion/ig-rewarding/outputs",
+    data_dir="outputs",
     split="train",
 )
 
 # %%
-
+ds.push_to_hub(
+    "toilaluan/ig_rewarding_db_v3", 
+    token=""
+)
 # %%
