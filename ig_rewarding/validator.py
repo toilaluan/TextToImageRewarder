@@ -5,10 +5,12 @@ from PIL import Image
 
 
 class Validator(nn.Module):
-    def __init__(self, rewarder_cfg, prompter_cfg, device="cuda"):
+    def __init__(self, rewarder_cfg=None, prompter_cfg=None, device="cuda"):
         super(Validator, self).__init__()
-        self.rewarder = instantiate_from_config(rewarder_cfg).to(device)
-        self.prompter = instantiate_from_config(prompter_cfg).to(device)
+        if rewarder_cfg:
+            self.rewarder = instantiate_from_config(rewarder_cfg).to(device)
+        if prompter_cfg:
+            self.prompter = instantiate_from_config(prompter_cfg).to(device)
 
     def generate_prompt(self, topics: List[str]):
         return self.prompter.generate_prompt(topics)

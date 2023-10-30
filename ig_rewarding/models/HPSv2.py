@@ -10,33 +10,23 @@ import numpy as np
 class HPSv2(nn.Module):
     def __init__(self, device):
         super().__init__()
-        self.min = 0.2
-        self.max = 0.3
         self.device = device
         self.model, self.preprocess, self.tokenizer = self._init_model()
-
+    @torch.inference_mode()
     def forward(self, images: List[Image.Image], prompt: str, *args, **kwargs):
         # Process the image
         rewards = []
-        for image in images:
-            image = (
-                self.preprocess(image).unsqueeze(0).to(device=device, non_blocking=True)
-            )
-            # Process the prompt
-            text = self.tokenizer([prompt]).to(device=device, non_blocking=True)
-            # Calculate the HPS
-            with torch.cuda.amp.autocast():
-                outputs = self.model(image, text)
-                image_features, text_features = (
-                    outputs["image_features"],
-                    outputs["text_features"],
-                )
-                logits_per_image = image_features @ text_features.T
-
-                hps_score = torch.diagonal(logits_per_image).cpu()
-            rewards.append(hps_score)
-        score = torch.tensor(rewards).mean() 
-        return (score - self.min) / (self.max - self.min)
+        images = [self.preprocess(image) for image in images]
+        images = torch.stack(images).to(device=self.device, non_blocking=True)
+        prompt = self.tokenizer([prompt])
+        prompt = prompt.to(device=self.device, non_blocking=True)
+        
+        with torch.cuda.amp.autocast():
+            outputs = self.model(images, prompt)
+            num_images = torch.tensor(images.size(0))
+            image_features, text_features, logit_scale = outputs["image_features"], outputs["text_features"], outputs["logit_scale"]
+            logits_per_image = image_features @ text_features.T
+        return logits_per_image.mean()
 
     def _init_model(self, cp: str = os.path.join(root_path, "HPS_v2_compressed.pt")):
         initialize_model()

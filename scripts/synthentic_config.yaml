@@ -1,0 +1,23 @@
+N_TRY_PER_ENDPOINT: 25
+N_IMAGE_PER_PROMPT: 4
+NEGATIVE_PROMPT: "ugly, blurry, poor quality, nsfw, sexy, nude, naked"
+TOPICS:
+  - "animated style"
+  - "artistic style"
+  - "landscape style"
+  - "portrait style"
+  - "realistic photo style"
+ENDPOINTS:
+  sd:
+    - "stablediffusionapi/edge-of-realism"
+    - "stablediffusionapi/rev-anim"
+    - "stablediffusionapi/realistic-vision-v51"
+    - "dreamlike-art/dreamlike-photoreal-2.0"
+    - "stabilityai/stable-diffusion-2-1"
+    - "CompVis/stable-diffusion-v1-4"
+    - "runwayml/stable-diffusion-v1-5"
+  sdxl:
+    - "stabilityai/stable-diffusion-xl-base-1.0"
+    - "segmind/SSD-1B"
+DEVICE: "cuda"
+SAVE_DIR: "outputs"

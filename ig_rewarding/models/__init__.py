@@ -5,3 +5,4 @@ from .CLIPInterrogatorRewardModel import CLIPInterrogatorRewardModel
 from .PromptGenerator import PromptGenerator
 from .BLIPRewardModel import BLIPRewardModel
 from .HPSv2 import HPSv2
+from .PickRewardModel import PickRewardModel

@@ -11,6 +11,11 @@ rewarder:
   target: ig_rewarding.models.TextToImageRewarder
   params:
     rewarder_configs:
+      pick_rewarder:
+        target: ig_rewarding.models.PickRewardModel
+        params:
+          device: "cuda"
+        weight: 0.15
       image_rewarder:
         target: ig_rewarding.models.ImageRewardModel
         params:
@@ -21,7 +26,7 @@ rewarder:
         target: ig_rewarding.models.HPSv2
         params:
           device: "cuda"
-        weight: 1
+        weight: 0.15
       # blip_rewarder:
       #   target: ig_rewarding.models.BLIPRewardModel
       #   params:
