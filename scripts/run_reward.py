@@ -12,22 +12,23 @@ import io
 from tqdm import tqdm
 from PIL import Image
 
+
 def get_args():
-    parser = ArgumentParser()
+    parser = argparse.ArgumentParser()
     parser.add_argument("--save_hf_data_repo", type=str)
     parser.add_argument("--hf_token", type=str)
-    parser.add_argunebt("--input_hf_data_repo", type=str)
+    parser.add_argument("--input_hf_data_repo", type=str)
 
     args = parser.parse_args()
     return args
 
+
 def main():
     args = get_args()
     config_file = "ig_rewarding/config/baseline.yaml"
-    validator = Validator(rewarder_cfg=config["rewarder"], device="cuda")
-
     with open(config_file, "r") as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
+    validator = Validator(rewarder_cfg=config["rewarder"], device="cuda")
 
     dataset_name = args.input_hf_data_repo
     save_file = f"{dataset_name.replace('/', '-')}.json"
@@ -48,7 +49,9 @@ def main():
                     for image in images
                 ]
                 prompt = topic_group["prompt"].iloc[0]
-                sum_reward, individual_rewards = validator.get_reward_score(images, prompt)
+                sum_reward, individual_rewards = validator.get_reward_score(
+                    images, prompt
+                )
 
                 rewards.append(
                     {
@@ -70,9 +73,9 @@ def main():
         for item in rewards:
             f.write(json.dumps(item) + "\n")
 
-
     ds = load_dataset("json", data_files=save_file)
     ds.push_to_hub(args.save_hf_data_repo, token=args.hf_token)
 
-if __name__='__main__':
+
+if __name__ == "__main__":
     main()

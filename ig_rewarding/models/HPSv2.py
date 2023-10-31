@@ -12,6 +12,7 @@ class HPSv2(nn.Module):
         super().__init__()
         self.device = device
         self.model, self.preprocess, self.tokenizer = self._init_model()
+
     @torch.inference_mode()
     def forward(self, images: List[Image.Image], prompt: str, *args, **kwargs):
         # Process the image
@@ -20,11 +21,15 @@ class HPSv2(nn.Module):
         images = torch.stack(images).to(device=self.device, non_blocking=True)
         prompt = self.tokenizer([prompt])
         prompt = prompt.to(device=self.device, non_blocking=True)
-        
+
         with torch.cuda.amp.autocast():
             outputs = self.model(images, prompt)
             num_images = torch.tensor(images.size(0))
-            image_features, text_features, logit_scale = outputs["image_features"], outputs["text_features"], outputs["logit_scale"]
+            image_features, text_features, logit_scale = (
+                outputs["image_features"],
+                outputs["text_features"],
+                outputs["logit_scale"],
+            )
             logits_per_image = image_features @ text_features.T
         return logits_per_image.mean()
 

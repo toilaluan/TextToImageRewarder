@@ -1,12 +1,17 @@
-N_TRY_PER_ENDPOINT: 25
+N_TRY_PER_ENDPOINT: 100
 N_IMAGE_PER_PROMPT: 4
 NEGATIVE_PROMPT: "ugly, blurry, poor quality, nsfw, sexy, nude, naked"
 TOPICS:
-  - "animated style"
-  - "artistic style"
-  - "landscape style"
-  - "portrait style"
-  - "realistic photo style"
+  animated_style:
+    prefix: "a anime, artwork, animated illustration, high quality image of"
+  artistic_style:
+    prefix: "a artistic, artstation, painting, high quality, beautiful image of"
+  landscape_style:
+    prefix: "a landscape, scenic, nature, high quality, majestic image of"
+  portrait_style:
+    prefix: "a portrait, face, realistic, brilliant, pretty image of"
+  realistic_photo_style:
+    prefix: "a realistic, photo, genuine, captured, photography image of"
 ENDPOINTS:
   sd:
     - "stablediffusionapi/edge-of-realism"
