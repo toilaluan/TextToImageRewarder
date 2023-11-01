@@ -13,7 +13,6 @@ from chromadb.utils import embedding_functions
 class PromptGenerator(nn.Module):
     def __init__(self, chroma_db_config):
         super().__init__()
-        self.n_neighbors = chroma_db_config["n_neighbors"]
         self.init_prompt_database(chroma_db_config)
 
     def download_prompt_data(self, url: str):
