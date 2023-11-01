@@ -24,7 +24,7 @@ Provided topics, such as `artiristic style, animated style`, we use embedding re
 
 ## Getting Started
 1. Install requirements: `pip install -r requirements.txt`
-2. Update `transformers`, `datasets`, 'accelerate` to the lastest version: `pip install -U transformers datasets accelerate`
+2. Update `transformers`, `datasets`, `accelerate` to the lastest version: `pip install -U transformers datasets accelerate`
 
 ## Mimic validating process
 1. Init the validator
