@@ -14,46 +14,22 @@ rewarder:
         target: ig_rewarding.models.CLIPAestheticRewardModel
         params:
           device: "cuda"
-        weight: 0.1
-      pick_rewarder:
-        target: ig_rewarding.models.PickRewardModel
-        params:
-          device: "cuda"
-        weight: 0.15
+        # range [0, 8]
+        weight: 0.01
+      # pick_rewarder:
+      #   target: ig_rewarding.models.PickRewardModel
+      #   params:
+      #     device: "cuda"
+      #   weight: 0.1
       image_rewarder:
         target: ig_rewarding.models.ImageRewardModel
         params:
           name: "ImageReward-v1.0"
           device: "cuda"
+        # range [0, 2]
         weight: 1
-      hps_v2_rewarder:
-        target: ig_rewarding.models.HPSv2
-        params:
-          device: "cuda"
-        weight: 0.15
-      # blip_rewarder:
-      #   target: ig_rewarding.models.BLIPRewardModel
+      # hps_v2_rewarder:
+      #   target: ig_rewarding.models.HPSv2
       #   params:
-      #     name: "BLIP"
       #     device: "cuda"
-      #   weight: 0.25
-      # diversity_rewarder:
-      #   target: ig_rewarding.models.DiversityRewardModel
-      #   params:
-      #     model: "resnet18"
-      #     pretrained: true
-      #     device: "cuda"
-      #   weight: 0.15
-      # clip_interrogator_rewarder:
-      #   target: ig_rewarding.models.CLIPInterrogatorRewardModel
-      #   params:
-      #     ci_config:
-      #       clip_model_name: "ViT-L-14/openai"
-      #       caption_model_name: "blip-large"
-      #       device: "cuda"
-      #     bert_scorer_config:
-      #       model_type: "microsoft/deberta-xlarge-mnli"
-      #       device: "cuda"
-      #       lang: "en"
-      #       rescale_with_baseline: true
       #   weight: 0.15

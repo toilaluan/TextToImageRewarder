@@ -54,9 +54,7 @@ class PromptGenerator(nn.Module):
         print("Building prompt database")
 
     def _retrieve_prompts(self, queries: List[str], n_prompts: int) -> List[str]:
-        k_prompts = self.collection.query(
-            query_texts=queries, n_results=n_prompts
-        )
+        k_prompts = self.collection.query(query_texts=queries, n_results=n_prompts)
         return k_prompts["documents"]
 
     @torch.inference_mode()
