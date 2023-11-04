@@ -36,12 +36,10 @@ class GPTPrompt(nn.Module):
         for prompt_set in outputs:
             prompts = [prompt["generated_text"] for prompt in prompt_set]
 
-            print(prompts[:2])
             if self.use_fooocus:
                 prompts = [
                     self.clean_prompt(self.fooocus(prompt)) for prompt in tqdm(prompts)
                 ]
-                print(prompts[:2])
             prompt_sets.append(prompts)
         return prompt_sets
 
