@@ -1,18 +1,21 @@
 N_TRY_PER_ENDPOINT: 100
 N_IMAGE_PER_PROMPT: 4
-NEGATIVE_PROMPT: "ugly, blurry, poor quality, nsfw, sexy, nude, naked"
+NEGATIVE_PROMPT: "ugly, blurry, poor quality"
 TOPICS:
   animated_style:
-    prefix: "a anime, artwork, animated illustration, high quality image of"
+    prefix: "a animated image of"
   artistic_style:
-    prefix: "a artistic, artstation, painting, high quality, beautiful image of"
+    prefix: "a artistic, artstation image of"
   landscape_style:
-    prefix: "a landscape, scenic, nature, high quality, majestic image of"
+    prefix: "a landscape image of"
   portrait_style:
-    prefix: "a portrait, face, realistic, brilliant, pretty image of"
+    prefix: "a portrait image of"
   realistic_photo_style:
-    prefix: "a realistic, photo, genuine, captured, photography image of"
+    prefix: "a realistic photo of"
 ENDPOINTS:
+  sdxl:
+    - "stabilityai/stable-diffusion-xl-base-1.0"
+    - "segmind/SSD-1B"
   sd:
     - "stablediffusionapi/edge-of-realism"
     - "stablediffusionapi/rev-anim"
@@ -21,8 +24,5 @@ ENDPOINTS:
     - "stabilityai/stable-diffusion-2-1"
     - "CompVis/stable-diffusion-v1-4"
     - "runwayml/stable-diffusion-v1-5"
-  sdxl:
-    - "stabilityai/stable-diffusion-xl-base-1.0"
-    - "segmind/SSD-1B"
 DEVICE: "cuda"
 SAVE_DIR: "outputs"

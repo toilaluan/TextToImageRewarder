@@ -1,0 +1,1 @@
+from .PromptExpansionModel import FooocusExpansion

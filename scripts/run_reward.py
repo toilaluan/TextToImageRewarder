@@ -33,7 +33,7 @@ def main():
     dataset_name = args.input_hf_data_repo
     save_file = f"{dataset_name.replace('/', '-')}.json"
 
-    dataset = load_dataset(dataset_name, split="train")
+    dataset = load_dataset(dataset_name, split="train", download_mode='force_redownload', cache_dir='./cache')
     dataset_df = dataset.to_pandas()
 
     rewards = []

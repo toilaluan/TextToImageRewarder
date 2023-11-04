@@ -6,3 +6,4 @@ from .BLIPRewardModel import BLIPRewardModel
 from .HPSv2 import HPSv2
 from .PickRewardModel import PickRewardModel
 from .CLIPAestheticRewardModel import CLIPAestheticRewardModel
+from .GPTPrompt import GPTPrompt

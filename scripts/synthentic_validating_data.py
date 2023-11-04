@@ -25,12 +25,11 @@ synthentic_config = easydict.EasyDict(synthentic_config)
 
 
 def validate_pipe(
-    validator: Validator,
     pipe: Pipeline,
     pipeline_name: str,
-    topics: Dict[str, str],
     n_try: int,
     n_image_per_prompt: int,
+    all_prompts: Dict[str, List[str]],
     save_dir: str = "images",
     negative_prompt: str = "",
 ):
@@ -38,13 +37,14 @@ def validate_pipe(
     raw_pipeline_name = pipeline_name
     pipeline_name = pipeline_name.replace("/", "_")
     request_result = []
-    topic_names = list(topics.keys())
-    topic_prefixes = [topics[topic_name]["prefix"] for topic_name in topic_names]
-    all_topic_prompts = validator.generate_prompt(topic_prefixes, n_image_per_prompt)
 
     for i in range(n_try):
         request_id = i
-        prompts = [topic_prompts[i] for topic_prompts in all_topic_prompts]
+        prompts = []
+        topic_names = []
+        for topic_name, prompt in all_prompts.items():
+            topic_names.append(topic_name)
+            prompts.append(prompt[i])
         print(prompts)
         for j, prompt in enumerate(prompts):
             outputs = pipe(
@@ -107,7 +107,21 @@ def main():
         shutil.rmtree(synthentic_config.SAVE_DIR, ignore_errors=True)
         os.makedirs(synthentic_config.SAVE_DIR, exist_ok=True)
     print("Infered endpoints: ", infered_endpoints)
+    topic_names = list(synthentic_config.TOPICS.keys())
+    topic_prefixes = [
+        synthentic_config.TOPICS[topic_name]["prefix"] for topic_name in topic_names
+    ]
+    with torch.no_grad():
+        prompts = validator.generate_prompt(
+            topic_prefixes, synthentic_config.N_TRY_PER_ENDPOINT
+        )
+    prompts = {
+        topic_name: prompt_topic_set
+        for topic_name, prompt_topic_set in zip(topic_names, prompts)
+    }
+    del validator
     for sd_type, endpoints in synthentic_config.ENDPOINTS.items():
+        torch.cuda.empty_cache()
         for endpoint in endpoints:
             if endpoint in infered_endpoints:
                 continue
@@ -128,16 +142,16 @@ def main():
                     requires_safety_checker=False,
                 )
             pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead", fullgraph=True)
-            pipe = pipe.to(synthentic_config.DEVICE)
+            pipe.to(synthentic_config.DEVICE)
+            # pipe.enable_model_cpu_offload()
             sub_metadata = validate_pipe(
-                validator,
-                pipe,
-                endpoint,
-                synthentic_config.TOPICS,
-                synthentic_config.N_TRY_PER_ENDPOINT,
-                synthentic_config.N_IMAGE_PER_PROMPT,
+                pipe=pipe,
+                pipeline_name=endpoint,
+                n_try=synthentic_config.N_TRY_PER_ENDPOINT,
+                n_image_per_prompt=synthentic_config.N_IMAGE_PER_PROMPT,
                 save_dir=synthentic_config.SAVE_DIR,
                 negative_prompt=synthentic_config.NEGATIVE_PROMPT,
+                all_prompts=prompts,
             )
             metadata.extend(sub_metadata)
             with open(

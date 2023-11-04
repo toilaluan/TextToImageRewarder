@@ -1,10 +1,17 @@
 prompter:
-  target: ig_rewarding.models.PromptGenerator
+  target: ig_rewarding.models.GPTPrompt
   params:
-    chroma_db_config:
-      root_path: chroma_db/
-      collection_name: "diffusiondb"
-      prompt_table_url: "https://huggingface.co/datasets/THUDM/ImageRewardDB/resolve/main/metadata-train.parquet"
+    model_name: "Gustavosta/MagicPrompt-Stable-Diffusion"
+    device: "cuda"
+    fooocus_cfg:
+      url: "https://huggingface.co/lllyasviel/misc/resolve/main/fooocus_expansion.bin"
+      device: "cuda"
+  # target: ig_rewarding.models.PromptGenerator
+  # params:
+  #   chroma_db_config:
+  #     root_path: chroma_db/
+  #     collection_name: "diffusiondb"
+  #     prompt_table_url: "https://huggingface.co/datasets/THUDM/ImageRewardDB/resolve/main/metadata-train.parquet"
 
 rewarder:
   target: ig_rewarding.models.TextToImageRewarder
