@@ -9,3 +9,4 @@ images/
 outputs/
 *.pth
 !chroma_db/
+!ig_rewarding/models/prompt_expansion/fooocus_expansion/*.json
